@@ -209,7 +209,11 @@ stdenv.mkDerivation rec {
   # https://gitlab.com/kicad/code/kicad/-/issues/14792
   template_dir = symlinkJoin {
     name = "KiCad_template_dir";
-    paths = with passthru.libraries; [
+    paths = with passthru.libraries; if stdenv.hostPlatform.isDarwin then [
+      "${templates}/template"
+      "${footprints}/template"
+      "${symbols}/template"
+    ] else [
       "${templates}/share/kicad/template"
       "${footprints}/share/kicad/template"
       "${symbols}/share/kicad/template"
@@ -328,7 +332,6 @@ stdenv.mkDerivation rec {
     license = lib.licenses.gpl3Plus;
     maintainers = with lib.maintainers; [ evils ];
     platforms = lib.platforms.all;
-    broken = stdenv.hostPlatform.isDarwin;
     mainProgram = "kicad";
   };
 }
